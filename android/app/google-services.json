@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319618916859",
+    "project_id": "test-delete-53051",
+    "storage_bucket": "test-delete-53051.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319618916859:android:f25d247396bb2b6eda2b5e",
+        "android_client_info": {
+          "package_name": "com.example.testdelete"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxZd2io4Bw5EO3JpilO1WOJU4ZI_9PyX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
