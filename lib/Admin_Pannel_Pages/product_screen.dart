@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:test_delete/Admin_Pannel_Pages/admin.dart';
+import 'package:test_delete/Admin_Pannel_Pages/category_screen.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -19,24 +21,22 @@ class _ProductPageState extends State<ProductPage> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            color: const Color(0xFF749F29),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 60.0),
-                child: Row(
-                  children: [
-                    _buildSliderText('Dashboard'),
-                    _buildSliderText('Category'),
-                    _buildSliderText('Product'),
-                    _buildSliderText('Order'),
-                    _buildSliderText('Settings'),
-                  ],
-                ),
+          AppBar(
+            backgroundColor: const Color(0xFF749F29),
+            title: const Text("Products Page"),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
               ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Admin_Pannel(),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 20),
@@ -63,6 +63,22 @@ class _ProductPageState extends State<ProductPage> {
                 ],
               ),
               const SizedBox(height: 20),
+              ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddCategoryPage(onAddCategory: (String value) {  },
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF4911A),
+            ),
+            child: const Text('Add Category'),
+          ),
+          const SizedBox(height: 20),
             ],
           ),
         ],
@@ -73,7 +89,7 @@ class _ProductPageState extends State<ProductPage> {
   Widget _buildSliderText(String text) {
     return Container(
       width:
-          MediaQuery.of(context).size.width / 3, // Adjust the width as needed
+          MediaQuery.of(context).size.width / 5, // Adjust the width as needed
       margin: const EdgeInsets.only(bottom: 10),
       child: Center(
         child: Text(
@@ -134,7 +150,6 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ),
             const SizedBox(height: 8),
-            // Additional non-bold one-line text (description)
             const Text(
               'Product description goes here.',
               style: TextStyle(
@@ -184,7 +199,6 @@ class _ProductPageState extends State<ProductPage> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // Handle cancel button tap
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -194,8 +208,6 @@ class _ProductPageState extends State<ProductPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Handle confirm delete button tap
-                  // Perform delete operation here
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -326,6 +338,7 @@ class _AddProductPageState extends State<AddProductPage> {
     }
     return null;
   }
+
   Widget _displaySelectedImage() {
     if (_selectedImagePath != null) {
       return Image.file(

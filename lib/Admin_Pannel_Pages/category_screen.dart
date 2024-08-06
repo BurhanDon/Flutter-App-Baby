@@ -13,6 +13,41 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  final List<Map<String, dynamic>> categories = [
+    {
+      'imagePath': 'lib/assets/images/cloth.png',
+      'title': 'Child Cloths',
+      'count': '10',
+    },
+    {
+      'imagePath': 'lib/assets/images/diaper baby.jpg',
+      'title': 'Baby Diapers',
+      'count': '5',
+    },
+    {
+      'imagePath': 'lib/assets/images/baby food.jpg',
+      'title': 'Baby Food',
+      'count': '8',
+    },
+    {
+      'imagePath': 'lib/assets/images/feeder.jpg',
+      'title': 'Natural Feeder',
+      'count': '3',
+    },
+  ];
+
+  void _addCategory(String title, String imagePath) {
+    setState(() {
+      categories.add({'title': title, 'imagePath': imagePath, 'count': '0'});
+    });
+  }
+
+  void _deleteCategory(int index) {
+    setState(() {
+      categories.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,111 +55,72 @@ class _CategoryPageState extends State<CategoryPage> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 200,
+            // height: 200,
             color: const Color(0xFF749F29),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 60.0),
-                child: Row(
-                  children: [
-                    _buildSliderText('Dashboard', const Admin_Pannel()),
-                    _buildSliderText('Category', const CategoryPage()),
-                    _buildSliderText('Product', const ProductPage()),
-                    _buildSliderText('Order', const OrderPage()),
-                    _buildSliderText('Settings', const SettingPage()),
-                  ],
+            child: AppBar(
+              backgroundColor: const Color(0xFF749F29),
+              title: const Text("Category Page"),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
                 ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Admin_Pannel(),
+                    ),
+                  );
+                },
               ),
             ),
           ),
           const SizedBox(height: 20),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CategoryBox(
-                        imagePath: 'lib/assets/images/cloth baby.jpg',
-                        title: 'Child Cloths',
-                        count: '10',
-                        editIcon: Icons.edit,
-                        deleteIcon: Icons.delete,
-                        onDelete: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _buildDeleteDialog(context),
-                          );
-                        },
-                      ),
-                      CategoryBox(
-                        imagePath: 'lib/assets/images/diaper baby.jpg',
-                        title: 'Baby Diapers',
-                        count: '5',
-                        editIcon: Icons.edit,
-                        deleteIcon: Icons.delete,
-                        onDelete: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _buildDeleteDialog(context),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CategoryBox(
-                        imagePath: 'lib/assets/images/baby food.jpg',
-                        title: 'Baby Food',
-                        count: '8',
-                        editIcon: Icons.edit,
-                        deleteIcon: Icons.delete,
-                        onDelete: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _buildDeleteDialog(context),
-                          );
-                        },
-                      ),
-                      CategoryBox(
-                        imagePath: 'lib/assets/images/feeder.jpg',
-                        title: 'Natural Feeder',
-                        count: '3',
-                        editIcon: Icons.edit,
-                        deleteIcon: Icons.delete,
-                        onDelete: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _buildDeleteDialog(context),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddCategoryPage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF4911A),
-                    ),
-                    child: const Text('Add Category'),
-                  ),
-                ],
+            child: GridView.builder(
+              padding: const EdgeInsets.all(10.0),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                return CategoryBox(
+                  imagePath: categories[index]['imagePath'],
+                  title: categories[index]['title'],
+                  count: categories[index]['count'],
+                  editIcon: Icons.edit,
+                  deleteIcon: Icons.delete,
+                  onDelete: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => _buildDeleteDialog(context, index),
+                    );
+                  },
+                );
+              },
             ),
           ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddCategoryPage(onAddCategory: (String value) {  },
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF4911A),
+            ),
+            child: const Text('Add Category'),
+          ),
+          const SizedBox(height: 20),
+
         ],
       ),
     );
@@ -155,7 +151,7 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Widget _buildDeleteDialog(BuildContext context) {
+  Widget _buildDeleteDialog(BuildContext context, int index) {
     return AlertDialog(
       title: const Text('Delete category'),
       content: Column(
@@ -168,7 +164,6 @@ class _CategoryPageState extends State<CategoryPage> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // Handle cancel button tap
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -178,7 +173,7 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Handle confirm delete button tap
+                  _deleteCategory(index);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -196,6 +191,9 @@ class _CategoryPageState extends State<CategoryPage> {
 
 class AddCategoryPage extends StatelessWidget {
   final TextEditingController _categoryNameController = TextEditingController();
+  final ValueChanged<String> onAddCategory;
+
+  AddCategoryPage({Key? key, required this.onAddCategory}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -224,9 +222,9 @@ class AddCategoryPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Handle add category button tap
-                String categoryName = _categoryNameController.text;
-                // Process the new category as needed
+                // String categoryName = _categoryNameController.text;
+                // onAddCategory(categoryName, 'lib/assets/images/cloth.png');
+                // Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF4911A),

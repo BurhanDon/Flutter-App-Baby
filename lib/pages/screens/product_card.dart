@@ -5,7 +5,9 @@ import 'package:test_delete/pages/screens/detail_screen.dart';
 class ProductCard extends StatelessWidget {
   final Product product;
 
-  const ProductCard({Key? key, required this.product, required Null Function() onTap}) : super(key: key);
+  const ProductCard(
+      {Key? key, required this.product, required Null Function() onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

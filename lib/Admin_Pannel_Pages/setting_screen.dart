@@ -166,8 +166,8 @@ class _SettingPageState extends State<SettingPage> {
                   backgroundColor: const Color(0xFFF4911A),
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 18.0, horizontal: 18.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 18.0, horizontal: 18.0),
                   child: Text('Logout'),
                 ),
               ),
@@ -182,8 +182,8 @@ class _SettingPageState extends State<SettingPage> {
                   backgroundColor: const Color(0xFFF4911A),
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 18.0, horizontal: 18.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 18.0, horizontal: 18.0),
                   child: Text('Login'),
                 ),
               ),
@@ -192,6 +192,7 @@ class _SettingPageState extends State<SettingPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:test_delete/models/product.dart';
+import 'package:test_delete/pages/baby_food_screen.dart';
+import 'package:test_delete/pages/cloth_screen.dart';
+import 'package:test_delete/pages/diapers_screen.dart';
+import 'package:test_delete/pages/screens/Components/footer_widget.dart';
 import 'package:test_delete/pages/screens/detail_screen.dart';
 import 'package:test_delete/pages/screens/Components/bottomnavbar_widget.dart';
 import 'package:test_delete/pages/screens/Components/CategoryCard.dart';
 import 'package:test_delete/pages/screens/product_card.dart';
+import 'package:test_delete/pages/toys_screen.dart';
 
 class MainPageScreen extends StatefulWidget {
   const MainPageScreen({super.key});
@@ -12,7 +17,8 @@ class MainPageScreen extends StatefulWidget {
   State<MainPageScreen> createState() => _MainPageScreenState();
 }
 
-class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStateMixin {
+class _MainPageScreenState extends State<MainPageScreen>
+    with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   bool _isBottomNavBarVisible = true;
 
@@ -31,7 +37,7 @@ class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStat
       description: 'Soft and cuddly stuffed bear.',
       price: 20.00,
       rating: 4.7,
-      imageUrl: 'lib/assets/images/bear.png',
+      imageUrl: 'lib/assets/images/toys.jpg',
     ),
     Product(
       id: '3',
@@ -39,7 +45,7 @@ class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStat
       description: 'Exciting toy car for children.',
       price: 10.00,
       rating: 4.6,
-      imageUrl: 'lib/assets/images/babycar.png',
+      imageUrl: 'lib/assets/images/toys.jpg',
     ),
     Product(
       id: '4',
@@ -47,7 +53,7 @@ class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStat
       description: 'Beautiful doll house with furniture.',
       price: 35.00,
       rating: 4.8,
-      imageUrl: 'lib/assets/images/wodehouse.png',
+      imageUrl: 'lib/assets/images/toys.jpg',
     ),
   ];
 
@@ -154,22 +160,51 @@ class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStat
                               CategoryCard(
                                 icon: Icons.toys,
                                 label: 'Toys',
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ToysPage(),
+                                    ),
+                                  );
+                                },
                               ),
                               CategoryCard(
                                 icon: Icons.bedroom_baby_outlined,
                                 label: 'Diapers',
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const DiaperPage(),
+                                    ),
+                                  );
+                                },
                               ),
                               CategoryCard(
                                 icon: Icons.sledding_sharp,
                                 label: 'Cloths',
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ClothPage(),
+                                    ),
+                                  );
+                                },
                               ),
                               CategoryCard(
                                 icon: Icons.food_bank_outlined,
                                 label: 'Baby Foods',
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BabyfoodPage(),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -205,15 +240,16 @@ class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStat
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 20.0, left: 13, right: 13, bottom: 20),
+                padding: const EdgeInsets.only(
+                    top: 20.0, left: 13, right: 13, bottom: 20),
                 child: GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 0.8, // Adjust as needed
+                    childAspectRatio: 0.9, // Adjust as needed
                   ),
                   itemCount: _bestSaleProducts.length,
                   itemBuilder: (context, index) {
@@ -234,10 +270,11 @@ class _MainPageScreenState extends State<MainPageScreen> with TickerProviderStat
               ),
             ],
           ),
+          const FooterWidget(),
         ],
       ),
       bottomNavigationBar: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         height: _isBottomNavBarVisible ? 60 : 0,
         child: _isBottomNavBarVisible
             ? const BottomNavBar(

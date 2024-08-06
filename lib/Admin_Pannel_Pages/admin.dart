@@ -1,95 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:test_delete/Admin_Pannel_Pages/category_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/order_screen.dart';
 import 'package:test_delete/Admin_Pannel_Pages/product_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/setting_screen.dart';
+import 'package:test_delete/pages/screens/widgets/login_screen.dart';
 
 class Admin_Pannel extends StatefulWidget {
-  const Admin_Pannel({super.key});
+  static String routeName = "/Admin_Pannel";
+
+  const Admin_Pannel({Key? key}) : super(key: key);
 
   @override
-  State<Admin_Pannel> createState() => _Admin_PannelState();
+  _Admin_PannelState createState() => _Admin_PannelState();
 }
 
 class _Admin_PannelState extends State<Admin_Pannel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF749F29),
+        title: const Text("Welcome Admin"),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Admin_Pannel(),
+              ),
+            );
+          },
+        ),
+      ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              color: const Color(0xFF749F29),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
-                  child: Row(
-                    children: [
-                      _buildSliderText('Dashboard', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Admin_Pannel()));
-                      }),
-                      _buildSliderText('Category', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CategoryPage()));
-                      }),
-                      _buildSliderText('Product', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ProductPage()));
-                      }),
-                      _buildSliderText('Order', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const OrderPage()));
-                      }),
-                      _buildSliderText('Settings', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SettingPage()));
-                      }),
-                    ],
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildDashboardItem('Category', const CategoryPage()),
-                    _buildDashboardItem('Product', const ProductPage()),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildDashboardItem('Orders', const OrderPage()),
-                    _buildDashboardItem('Setting', const SettingPage()),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildDashboardItem('Active Users', null),
-                  ],
-                ),
-              ],
+            _buildAdminProfileCircle(),
+            const SizedBox(height: 40),
+            AdminMenu(
+              text: "Dashboard",
+              icon: Icons.dashboard,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Admin_Pannel(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 30),
+            AdminMenu(
+              text: "Category",
+              icon: Icons.category,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryPage(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 30),
+            AdminMenu(
+              text: "Product",
+              icon: Icons.shopping_cart,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProductPage(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 30),
+            AdminMenu(
+              text: "Orders",
+              icon: Icons.list_alt,
+              press: () {},
+            ),
+            const SizedBox(height: 30),
+            AdminMenu(
+              text: "Settings",
+              icon: Icons.settings,
+              press: () {},
+            ),
+            const SizedBox(height: 30),
+            AdminMenu(
+              text: "Log Out",
+              icon: Icons.exit_to_app,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -97,75 +110,86 @@ class _Admin_PannelState extends State<Admin_Pannel> {
     );
   }
 
-  Widget _buildSliderText(String text, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: MediaQuery.of(context).size.width / 4,
-        margin: const EdgeInsets.only(bottom: 10),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+  Widget _buildAdminProfileCircle() {
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: 60,
+          backgroundColor: Colors.grey.shade200,
+          child: Icon(
+            Icons.person,
+            size: 60,
+            color: Colors.grey.shade800,
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: InkWell(
+            onTap: () {
+              // Admin profile picture change logic
+            },
+            child: const Icon(
+              Icons.camera_alt,
+              color: Color(0xFF749F29),
+              size: 30,
             ),
           ),
         ),
-      ),
+      ],
     );
   }
+}
 
-  Widget _buildDashboardItem(String title, Widget? page) {
-    return InkWell(
-      onTap: () {
-        if (page != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => page,
-            ),
-          );
-        }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.4,
-        height: 150,
-        margin: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '2',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+class AdminMenu extends StatelessWidget {
+  final String text;
+  final IconData icon;
+  final VoidCallback press;
+
+  const AdminMenu({
+    Key? key,
+    required this.text,
+    required this.icon,
+    required this.press,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: InkWell(
+        onTap: press,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 25,
+                color: const Color(0xFFF4911A),
               ),
-            ),
-          ],
+              const SizedBox(width: 20), // Space between icon and text
+              Text(
+                text,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              const Icon(Icons.arrow_forward_ios),
+            ],
+          ),
         ),
       ),
     );
