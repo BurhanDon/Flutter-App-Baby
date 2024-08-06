@@ -2,10 +2,11 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:test_delete/Admin_Pannel_Pages/admin.dart';
+import 'package:test_delete/Admin_Pannel_Pages/adminpanel_screen.dart';
 import 'package:test_delete/Admin_Pannel_Pages/category_screen.dart';
+import 'package:test_delete/Admin_Pannel_Pages/order_screen.dart';
 import 'package:test_delete/Admin_Pannel_Pages/product_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/setting_screen.dart';
+import 'package:test_delete/Admin_Pannel_Pages/adminlogin_screen.dart';
 import 'package:test_delete/firebase_options.dart';
 import 'package:test_delete/pages/baby_food_screen.dart';
 import 'package:test_delete/pages/cloth_screen.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       // home: SplashScreen(),
-      // home: RegistrationScreen(),
+      home: RegistrationScreen(),
       // home: LoginScreen(),
       // home: MainPageScreen(),
       // home: OrderSuccessPage(),
@@ -69,9 +70,9 @@ class MyApp extends StatelessWidget {
       // home: SearchProductPage(),
       // home: Admin_Pannel(),
       // home: CategoryPage(),
-      home: ProductPage(),
+      // home: ProductPage(),
       // home: OrderPage(),
-      // home: SettingPage(),
+      // home: AdminLogin(),
       // home: ProfileScreen(),
     );
   }

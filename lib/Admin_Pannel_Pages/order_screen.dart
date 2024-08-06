@@ -1,200 +1,179 @@
 import 'package:flutter/material.dart';
-import 'package:test_delete/Admin_Pannel_Pages/admin.dart';
-import 'package:test_delete/Admin_Pannel_Pages/category_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/product_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/setting_screen.dart';
+import 'package:test_delete/Admin_Pannel_Pages/adminpanel_screen.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key? key}) : super(key: key);
+  const OrderPage({super.key});
 
   @override
-  State<OrderPage> createState() => _OrderPageState();
+  _OrderPageState createState() => _OrderPageState();
 }
 
 class _OrderPageState extends State<OrderPage> {
+  List<Map<String, String>> orders = [
+    {
+      'status': 'Processing',
+      'date': '01 Sep 2023',
+      'orderId': 'CWT0012',
+      'shippingDate': '09 Sep 2023',
+    },
+    {
+      'status': 'Shipment on the way',
+      'date': '02 Oct 2023',
+      'orderId': 'CWT0025',
+      'shippingDate': '06 Oct 2023',
+    },
+    {
+      'status': 'Processing',
+      'date': '02 Oct 2023',
+      'orderId': 'CWT0025',
+      'shippingDate': '06 Oct 2023',
+    },
+    {
+      'status': 'Delivered',
+      'date': '02 Oct 2023',
+      'orderId': 'CWT0025',
+      'shippingDate': '06 Oct 2023',
+    },
+    {
+      'status': 'Delivered',
+      'date': '02 Oct 2023',
+      'orderId': 'CWT0025',
+      'shippingDate': '06 Oct 2023',
+    },
+    {
+      'status': 'Cancelled',
+      'date': '02 Oct 2023',
+      'orderId': 'CWT0025',
+      'shippingDate': '06 Oct 2023',
+    },
+    // Add more orders as needed
+  ];
+
+  void deleteOrder(int index) {
+    setState(() {
+      orders.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            color: const Color(0xFF749F29),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 60.0),
-                child: Row(
-                  children: [
-                    _buildSliderText('Dashboard', const Admin_Pannel()),
-                    _buildSliderText('Category', const CategoryPage()),
-                    _buildSliderText('Product', const ProductPage()),
-                    _buildSliderText('Order', const OrderPage()),
-                    _buildSliderText('Settings', const SettingPage()),
-                  ],
-                ),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF749F29),
+        title: const Text(
+          "Orders Page",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Admin_Pannel(),
               ),
-            ),
-          ),
-          _buildOrderSection('1', 'Raqeeb Uddin', context),
-          _buildOrderSection('2', 'Abbas', context),
-          // Add more sections as needed...
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSliderText(String text, Widget page) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width / 4,
-        margin: const EdgeInsets.only(bottom: 10),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+            );
+          },
         ),
       ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          final order = orders[index];
+          return _buildOrderCard(
+            status: order['status']!,
+            date: order['date']!,
+            orderId: order['orderId']!,
+            shippingDate: order['shippingDate']!,
+            color: _getStatusColor(order['status']!),
+            onDelete: () => deleteOrder(index),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildOrderSection(String number, String name, BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Navigate to the order details page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  OrderDetailsPage(orderNumber: number, orderName: name)),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(top: 16),
-        padding: const EdgeInsets.all(16),
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildOrderCard({
+    required String status,
+    required String date,
+    required String orderId,
+    required String shippingDate,
+    required Color color,
+    required VoidCallback onDelete,
+  }) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Stack(
           children: [
-            Text(number,
-                style: const TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold)),
-            Text(name,
-                style: const TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold)),
-            const Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.delete, color: Colors.red),
-                SizedBox(width: 16),
-                Icon(Icons.delivery_dining, color: Colors.blue),
-                SizedBox(width: 16),
-                Icon(Icons.remove_red_eye, color: Color(0xFF749F29)),
+                Text(
+                  status,
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.date_range, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(date),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text('Order: $orderId'),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.local_shipping, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text('Shipping Date: $shippingDate'),
+                  ],
+                ),
               ],
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: onDelete,
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class OrderDetailsPage extends StatelessWidget {
-  final String orderNumber;
-  final String orderName;
-
-  OrderDetailsPage({required this.orderNumber, required this.orderName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Order Detail'),
-        backgroundColor: const Color(0xFF749F29),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'View Order',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Order ID: $orderNumber',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Shipped To',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Name: $orderName'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('City: Karachi'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('Lane: Home'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('Phone Number: +92 3101242766'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('Postal Code: 12345'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Product',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('Subtotal: \$90.00'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('Discount: \$10.00'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('Shipping: \$5.00'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Total: \$80',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          ),
-        ],
-      ),
-    );
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Processing':
+        return Colors.blue;
+      case 'Shipment on the way':
+        return Colors.orange;
+      case 'Delivered':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
   }
 }

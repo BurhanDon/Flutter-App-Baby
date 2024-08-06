@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_delete/Admin_Pannel_Pages/admin.dart';
-import 'package:test_delete/Admin_Pannel_Pages/order_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/product_screen.dart';
-import 'package:test_delete/Admin_Pannel_Pages/setting_screen.dart';
+import 'package:test_delete/Admin_Pannel_Pages/adminpanel_screen.dart';
 import '../pages/screens/widgets/category_box.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -54,12 +51,14 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Column(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            // height: 200,
             color: const Color(0xFF749F29),
             child: AppBar(
               backgroundColor: const Color(0xFF749F29),
-              title: const Text("Category Page"),
+              title: const Text(
+                "Category Page",
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
@@ -109,7 +108,13 @@ class _CategoryPageState extends State<CategoryPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCategoryPage(onAddCategory: (String value) {  },
+                  builder: (context) => AddCategoryPage(
+                    onAddCategory: (String categoryName) {
+                      _addCategory(categoryName, 'lib/assets/images/cloth.png');
+                    },
+                    onAddCategoryImagePath: (String imagePath) {
+                      _addCategory('Sample Category', imagePath);
+                    },
                   ),
                 ),
               );
@@ -120,36 +125,35 @@ class _CategoryPageState extends State<CategoryPage> {
             child: const Text('Add Category'),
           ),
           const SizedBox(height: 20),
-
         ],
       ),
     );
   }
 
-  Widget _buildSliderText(String text, Widget page) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width / 4,
-        margin: const EdgeInsets.only(bottom: 10),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildSliderText(String text, Widget page) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => page),
+  //       );
+  //     },
+  //     child: Container(
+  //       width: MediaQuery.of(context).size.width / 4,
+  //       margin: const EdgeInsets.only(bottom: 10),
+  //       child: Center(
+  //         child: Text(
+  //           text,
+  //           style: const TextStyle(
+  //             color: Colors.white,
+  //             fontSize: 20,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildDeleteDialog(BuildContext context, int index) {
     return AlertDialog(
@@ -191,9 +195,14 @@ class _CategoryPageState extends State<CategoryPage> {
 
 class AddCategoryPage extends StatelessWidget {
   final TextEditingController _categoryNameController = TextEditingController();
-  final ValueChanged<String> onAddCategory;
+  final ValueChanged<String> onAddCategory; // Accepts only category name
+  final ValueChanged<String> onAddCategoryImagePath; // Accepts image path
 
-  AddCategoryPage({Key? key, required this.onAddCategory}) : super(key: key);
+  AddCategoryPage({
+    Key? key,
+    required this.onAddCategory,
+    required this.onAddCategoryImagePath,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -222,9 +231,10 @@ class AddCategoryPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // String categoryName = _categoryNameController.text;
-                // onAddCategory(categoryName, 'lib/assets/images/cloth.png');
-                // Navigator.of(context).pop();
+                String categoryName = _categoryNameController.text;
+                onAddCategory(categoryName);
+                // onAddCategoryImagePath('lib/assets/images/cloth.png');
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF4911A),

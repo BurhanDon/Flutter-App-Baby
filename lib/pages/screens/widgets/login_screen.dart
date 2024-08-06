@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:test_delete/Admin_Pannel_Pages/admin.dart';
+import 'package:test_delete/Admin_Pannel_Pages/adminlogin_screen.dart';
 import 'package:test_delete/pages/screens/widgets/registration_screen.dart';
 import '../Main_Page.dart';
 
@@ -17,29 +17,49 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  var _isVisible = false;
-
-  void loginAdmin() {
-    String adminEmail = 'amdmin@gmail.com';
-    String adminPassword = 'admin123456';
-    String enteredEmail = emailController.text.trim();
-    String enteredPassword = passwordController.text.trim();
-
-    if (enteredEmail == adminEmail && enteredPassword == adminPassword) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Admin_Pannel()),
-      );
-    } else {
+  Future<void> _sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Admin login failed: Incorrect Email or Password.'),
+          content: Text('Password reset email sent.'),
           duration: Duration(seconds: 2),
         ),
       );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to send password reset email.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  var _isVisible = false;
+  int _tapCount = 0;
+  DateTime _firstTapTime = DateTime.now();
+
+  void _onImageTap() {
+    DateTime now = DateTime.now();
+    if (_tapCount == 0) {
+      _firstTapTime = now;
+    }
+
+    if (now.difference(_firstTapTime).inSeconds < 2) {
+      _tapCount++;
+      if (_tapCount == 3) {
+        // Navigate to secret admin login screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminLogin()),
+        );
+      }
+    } else {
+      _tapCount = 1;
+      _firstTapTime = now;
     }
   }
 
@@ -74,7 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
-    // final deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -82,14 +101,17 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
-                child: Container(
-                  height: deviceHeight * 0.30,
-                  child: const FittedBox(
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                        'lib/assets/images/child.jpg',
+                child: GestureDetector(
+                  onTap: _onImageTap,
+                  child: Container(
+                    height: deviceHeight * 0.30,
+                    child: const FittedBox(
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(
+                          'lib/assets/images/child.jpg',
+                        ),
+                        radius: 120,
                       ),
-                      radius: 120,
                     ),
                   ),
                 ),
@@ -194,15 +216,29 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                                onPressed: () {
-                                  // Add your forgot password functionality here
-                                },
-                                child: const Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    color: Color(0xFF749F29),
-                                  ),
-                                ))
+                              onPressed: () {
+                                String email = emailController.text.trim();
+                                if (email.isNotEmpty &&
+                                    RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                        .hasMatch(email)) {
+                                  _sendPasswordResetEmail(email);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Please enter a valid email address.'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: const Text(
+                                'Forgot Password?',
+                                style: TextStyle(
+                                  color: Color(0xFF749F29),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         Container(
@@ -212,24 +248,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             top: constraints.maxHeight * 0.05,
                           ),
                           child: ElevatedButton(
-                            onPressed: () {
-                              if (emailController.text.trim() ==
-                                  'amdmin@gmail.com') {
-                                loginAdmin();
-                              } else {
-                                loginUser();
-                              }
-                            },
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
+                            onPressed: loginUser,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF4911A),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(28),
                               ),
+                            ),
+                            child: const Text(
+                              'Login',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 22),
                             ),
                           ),
                         ),
@@ -237,29 +266,34 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: constraints.maxHeight * 0.03,
                         ),
                         RichText(
-                            text: TextSpan(
-                                text: 'Don\'t have an Account!',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                                children: [
+                          text: TextSpan(
+                            text: 'Don\'t have an Account!',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                            children: [
                               TextSpan(
-                                  text: ' Register',
-                                  style: const TextStyle(
-                                      color: Color(0xFF749F29),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const RegistrationScreen()),
-                                      );
-                                    })
-                            ]))
+                                text: ' Register',
+                                style: const TextStyle(
+                                  color: Color(0xFF749F29),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegistrationScreen(),
+                                      ),
+                                    );
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   );

@@ -91,35 +91,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           const Text(
                               'Please create your account to continue...'),
                           SizedBox(
-                            height: constraints.maxHeight * 0.08,
-                          ),
-                          Container(
-                            height: constraints.maxHeight * 0.12,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffB4B4B4).withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Center(
-                                child: TextFormField(
-                                  controller: nameController,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Enter your name',
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter your name';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: constraints.maxHeight * 0.02,
+                            height: constraints.maxHeight *
+                                0.10, //spacing between text boxes.
                           ),
                           Container(
                             height: constraints.maxHeight * 0.12,
@@ -230,15 +203,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   });
                                 }
                               },
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 22,),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFF4911A),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(28),
+                                ),
+                              ),
+                              child: const Text(
+                                'Register',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
                                 ),
                               ),
                             ),
@@ -284,4 +259,3 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 }
-

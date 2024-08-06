@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_delete/Admin_Pannel_Pages/admin.dart';
-import 'package:test_delete/Admin_Pannel_Pages/category_screen.dart';
+import 'package:test_delete/Admin_Pannel_Pages/adminpanel_screen.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -13,8 +11,30 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  final CollectionReference productsCollection =
-      FirebaseFirestore.instance.collection('Products');
+  List<Map<String, String>> products = [
+    {
+      'name': 'Product 1',
+      'description': 'Description for product 1',
+      'imagePath': 'lib/assets/images/cloth.png',
+    },
+    {
+      'name': 'Product 2',
+      'description': 'Description for product 2',
+      'imagePath': 'lib/assets/images/cloth1.png',
+    },
+  ];
+
+  void _addProduct(Map<String, String> productData) {
+    setState(() {
+      products.add(productData);
+    });
+  }
+
+  void _deleteProduct(int index) {
+    setState(() {
+      products.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +43,11 @@ class _ProductPageState extends State<ProductPage> {
         children: [
           AppBar(
             backgroundColor: const Color(0xFF749F29),
-            title: const Text("Products Page"),
+            title: const Text(
+              "Products Page",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,
@@ -40,78 +64,76 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           const SizedBox(height: 20),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildProductCard(
-                      context, 'Product 1', Icons.edit, Icons.delete),
-                  _buildProductCard(
-                      context, 'Product 2', Icons.edit, Icons.delete),
-                ],
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(10.0),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildProductCard(
-                      context, 'Product 3', Icons.edit, Icons.delete),
-                  _buildProductCard(
-                      context, 'Product 4', Icons.edit, Icons.delete),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return _buildProductCard(
+                  context,
+                  products[index]['name']!,
+                  products[index]['description']!,
+                  products[index]['imagePath']!,
+                  Icons.edit,
+                  Icons.delete,
+                  onDelete: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => _buildDeleteDialog(context, index),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCategoryPage(onAddCategory: (String value) {  },
-                  ),
+                  builder: (context) =>
+                      AddProductPage(onAddProduct: _addProduct),
                 ),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFF4911A),
             ),
-            child: const Text('Add Category'),
+            child: const Text('Add Product'),
           ),
           const SizedBox(height: 20),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildSliderText(String text) {
-    return Container(
-      width:
-          MediaQuery.of(context).size.width / 5, // Adjust the width as needed
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Center(
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProductCard(BuildContext context, String productName,
-      IconData editIcon, IconData deleteIcon) {
+  Widget _buildProductCard(
+    BuildContext context,
+    String productName,
+    String productDescription,
+    String imagePath,
+    IconData editIcon,
+    IconData deleteIcon, {
+    required VoidCallback onDelete,
+  }) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AddProductPage(),
+            builder: (context) => AddProductPage(
+              onAddProduct: (productData) {
+                setState(() {
+                  products.add(productData);
+                });
+              },
+            ),
           ),
         );
       },
@@ -134,11 +156,11 @@ class _ProductPageState extends State<ProductPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Your image widget goes here
-            const Icon(
-              Icons.image,
-              size: 120,
-              color: Colors.grey,
+            Image.asset(
+              imagePath,
+              height: 120,
+              width: double.infinity,
+              fit: BoxFit.cover,
             ),
             const SizedBox(height: 8),
             Text(
@@ -150,9 +172,9 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Product description goes here.',
-              style: TextStyle(
+            Text(
+              productDescription,
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 14,
               ),
@@ -161,22 +183,10 @@ class _ProductPageState extends State<ProductPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Icon(
-                  editIcon,
-                  color: Colors.blue,
-                ),
+                Icon(editIcon, color: Colors.blue),
                 GestureDetector(
-                  onTap: () {
-                    // Show delete confirmation dialog
-                    showDialog(
-                      context: context,
-                      builder: (context) => _buildDeleteDialog(context),
-                    );
-                  },
-                  child: Icon(
-                    deleteIcon,
-                    color: Colors.red,
-                  ),
+                  onTap: onDelete,
+                  child: Icon(deleteIcon, color: Colors.red),
                 ),
               ],
             ),
@@ -186,7 +196,7 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  Widget _buildDeleteDialog(BuildContext context) {
+  Widget _buildDeleteDialog(BuildContext context, int index) {
     return AlertDialog(
       title: const Text('Delete product'),
       content: Column(
@@ -208,10 +218,11 @@ class _ProductPageState extends State<ProductPage> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  _deleteProduct(index);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
+                  backgroundColor: Colors.red,
                 ),
                 child: const Text('Confirm Delete'),
               ),
@@ -224,7 +235,9 @@ class _ProductPageState extends State<ProductPage> {
 }
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  final ValueChanged<Map<String, String>> onAddProduct;
+
+  const AddProductPage({super.key, required this.onAddProduct});
 
   @override
   _AddProductPageState createState() => _AddProductPageState();
@@ -235,9 +248,6 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _productPriceController = TextEditingController();
   final TextEditingController _productDescController = TextEditingController();
   String? _selectedImagePath;
-
-  final CollectionReference productsCollection =
-      FirebaseFirestore.instance.collection('Products');
 
   @override
   Widget build(BuildContext context) {
@@ -269,9 +279,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             TextField(
               controller: _productDescController,
               decoration: const InputDecoration(
@@ -282,13 +290,11 @@ class _AddProductPageState extends State<AddProductPage> {
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
-                // Handle image upload
                 String? filePath = await _openFileManager();
                 if (filePath != null) {
                   setState(() {
                     _selectedImagePath = filePath;
                   });
-                  print('Selected file path: $filePath');
                 }
               },
               child: Container(
@@ -313,8 +319,11 @@ class _AddProductPageState extends State<AddProductPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Handle Add Product button tap
-                _addProductToFirestore();
+                widget.onAddProduct({
+                  'name': _productNameController.text,
+                  'description': _productDescController.text,
+                  'imagePath': _selectedImagePath ?? '',
+                });
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -332,9 +341,7 @@ class _AddProductPageState extends State<AddProductPage> {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      String? filePath = result.files.single.path;
-      print('Selected image path: $filePath');
-      return filePath;
+      return result.files.single.path;
     }
     return null;
   }
@@ -356,22 +363,5 @@ class _AddProductPageState extends State<AddProductPage> {
         ),
       );
     }
-  }
-
-  Future<void> _addProductToFirestore() async {
-    print('Adding product to Firestore');
-    print('Selected image path: $_selectedImagePath');
-
-    // Check other data fields as well
-    print('Product name: ${_productNameController.text}');
-    print('Product price: ${_productPriceController.text}');
-    print('Product description: ${_productDescController.text}');
-
-    await productsCollection.add({
-      'name': _productNameController.text,
-      'price': _productPriceController.text,
-      'description': _productDescController.text,
-      'imagePath': _selectedImagePath,
-    });
   }
 }
