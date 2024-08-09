@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:test_delete/Admin_Pannel_Pages/adminlogin_screen.dart';
 import 'package:test_delete/pages/screens/widgets/registration_screen.dart';
 import '../Main_Page.dart';
@@ -18,6 +18,40 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  // Future<void> _signInWithGoogle() async {
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  //     if (googleUser == null) {
+  //       return; // The user canceled the sign-in
+  //     }
+
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
+  //     final AuthCredential credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
+
+  //     UserCredential userCredential =
+  //         await _auth.signInWithCredential(credential);
+
+  //     if (userCredential.user != null) {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const MainPageScreen()),
+  //       );
+  //     }
+  //   } catch (error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Failed to sign in with Google.'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //   }
+  // }
 
   Future<void> _sendPasswordResetEmail(String email) async {
     try {
