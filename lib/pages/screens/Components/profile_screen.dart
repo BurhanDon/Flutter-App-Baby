@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_delete/pages/screens/widgets/login_screen.dart';
 import '../Main_Page.dart';
@@ -16,6 +17,18 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   File? _image;
+
+  String? googleProfilePhotoUrl;
+  GoogleSignInAccount? _currentUser;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  @override
+  void initState() {
+    super.initState();
+    _currentUser = _googleSignIn.currentUser;
+    setState(() {
+      googleProfilePhotoUrl = _currentUser?.photoUrl;
+    });
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -142,10 +155,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         CircleAvatar(
           radius: 60,
-          backgroundImage: _image == null
-              ? const AssetImage(
-                  'lib/assets/images/') // Set default image asset
-              : FileImage(_image!) as ImageProvider,
+          backgroundImage: _image != null
+              ? FileImage(_image!)
+              : (googleProfilePhotoUrl != null
+                      ? NetworkImage(googleProfilePhotoUrl!)
+                      : const AssetImage('lib/assets/images/burhan.jpg'))
+                  as ImageProvider,
         ),
         Positioned(
           bottom: 0,
@@ -193,7 +208,7 @@ class ProfileMenu extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 5,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),

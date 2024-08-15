@@ -1,14 +1,9 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:test_delete/pages/screens/widgets/order_screen.dart';
+import 'package:test_delete/pages/screens/Components/bottomnavbar_widget.dart';
 import 'package:test_delete/pages/screens/widgets/order_success_screen.dart';
-import 'package:test_delete/pages/screens/widgets/search_page_screen.dart';
 import 'package:test_delete/pages/shopping_cart_screen.dart';
-import 'Components/profile_screen.dart';
-import 'Main_Page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,8 +44,8 @@ class CheckOutPage extends StatelessWidget {
             );
           },
         ),
-        actions: [
-          const Padding(
+        actions: const [
+          Padding(
             padding: EdgeInsets.only(right: 18.0),
             child: Row(
               children: [
@@ -154,115 +149,7 @@ class CheckOutPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        height: 80,
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Column(
-                children: [
-                  Icon(
-                    Icons.shop,
-                    color: Color(0xFF749F29),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text('Home'),
-                ],
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchProductPage(),
-                    ),
-                  );
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.search),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text('Search'),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShoppingCart(),
-                    ),
-                  );
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.shopping_cart),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text('Cart'),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OrderHistoryScreen(),
-                    ),
-                  );
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.history),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text('Orders'),
-                  ],
-                ),
-              ),
-              const Column(
-                children: [
-                  Icon(Icons.star),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text('Reviews'),
-                ],
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.person),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text('Profile'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: const BottomNavBar(currentIndex: 0),
     );
   }
 
@@ -308,8 +195,8 @@ class ShippingPage extends StatelessWidget {
             );
           },
         ),
-        actions: [
-          const Padding(
+        actions: const [
+          Padding(
             padding: EdgeInsets.only(right: 18.0),
             child: Row(
               children: [
@@ -319,63 +206,7 @@ class ShippingPage extends StatelessWidget {
           )
         ],
       ),
-      bottomNavigationBar: const BottomAppBar(
-        height: 80,
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.all(18.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Icon(
-                    Icons.shop,
-                    color: Color(0xFF749F29),
-                  ),
-                  SizedBox(height: 3),
-                  Text('Home'),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.search),
-                  SizedBox(height: 3),
-                  Text('Search'),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.shopping_cart),
-                  SizedBox(height: 3),
-                  Text('Cart'),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.history),
-                  SizedBox(height: 3),
-                  Text('Orders'),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.star),
-                  SizedBox(height: 3),
-                  Text('Reviews'),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.person),
-                  SizedBox(height: 3),
-                  Text('Profile'),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: const BottomNavBar(currentIndex: 0),
       body: ShippingForm(),
     );
   }

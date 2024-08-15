@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_delete/pages/screens/Main_Page.dart';
 import 'package:test_delete/pages/screens/widgets/login_screen.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -20,6 +22,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var _isVisible = false;
+
+  Future<void> _signInWithFacebook() async {
+    final LoginResult result = await FacebookAuth.instance.login();
+    if (result.status == LoginStatus.success) {
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainPageScreen()),
+      );
+    } else {
+      // Handle login failure
+      print(result.message);
+    }
+  }
 
   Future<void> sendData() async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -91,11 +109,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           const Text(
                               'Please create your account to continue...'),
                           SizedBox(
-                            height: constraints.maxHeight *
-                                0.10, //spacing between text boxes.
+                            height: constraints.maxHeight * 0.01,
                           ),
                           Container(
-                            height: constraints.maxHeight * 0.12,
+                            height: constraints.maxHeight * 0.11,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffB4B4B4).withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Center(
+                                child: TextField(
+                                  controller: nameController,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Enter your name',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: constraints.maxHeight * 0.01,
+                          ),
+                          Container(
+                            height: constraints.maxHeight * 0.11,
                             decoration: BoxDecoration(
                               color: const Color(0xffB4B4B4).withOpacity(0.4),
                               borderRadius: BorderRadius.circular(16),
@@ -123,10 +162,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: constraints.maxHeight * 0.02,
+                            height: constraints.maxHeight * 0.01,
                           ),
                           Container(
-                            height: constraints.maxHeight * 0.12,
+                            height: constraints.maxHeight * 0.11,
                             decoration: BoxDecoration(
                               color: const Color(0xffB4B4B4).withOpacity(0.4),
                               borderRadius: BorderRadius.circular(16),
@@ -167,7 +206,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: constraints.maxHeight * 0.02,
+                            height: constraints.maxHeight * 0.01,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -181,6 +220,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     ),
                                   ))
                             ],
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: constraints.maxHeight * 0.12,
+                            margin: EdgeInsets.only(
+                              top: constraints.maxHeight * 0.01,
+                            ),
+                            child: ElevatedButton.icon(
+                              onPressed: _signInWithFacebook,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF3B5998),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(28),
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
+                              ),
+                              icon: const Icon(
+                                Icons.facebook, // Use the Facebook icon here
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              label: const Text(
+                                'Sign in with Facebook',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: constraints.maxHeight * 0.01,
                           ),
                           Container(
                             width: double.infinity,
@@ -219,7 +291,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: constraints.maxHeight * 0.03,
+                            height: constraints.maxHeight * 0.02,
                           ),
                           RichText(
                               text: TextSpan(

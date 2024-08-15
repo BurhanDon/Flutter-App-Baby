@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:test_delete/Admin_Pannel_Pages/adminlogin_screen.dart';
 import 'package:test_delete/pages/screens/widgets/registration_screen.dart';
@@ -18,40 +19,40 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Future<void> _signInWithGoogle() async {
-  //   try {
-  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-  //     if (googleUser == null) {
-  //       return; // The user canceled the sign-in
-  //     }
+  Future<void> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return; // The user canceled the sign-in
+      }
 
-  //     final GoogleSignInAuthentication googleAuth =
-  //         await googleUser.authentication;
-  //     final AuthCredential credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-  //     UserCredential userCredential =
-  //         await _auth.signInWithCredential(credential);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
 
-  //     if (userCredential.user != null) {
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => const MainPageScreen()),
-  //       );
-  //     }
-  //   } catch (error) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Failed to sign in with Google.'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   }
-  // }
+      if (userCredential.user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainPageScreen()),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to sign in with Google.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   Future<void> _sendPasswordResetEmail(String email) async {
     try {
@@ -293,6 +294,36 @@ class _LoginScreenState extends State<LoginScreen> {
                               'Login',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: constraints.maxHeight * 0.12,
+                          margin: EdgeInsets.only(
+                            top: constraints.maxHeight * 0.02,
+                          ),
+                          child: ElevatedButton.icon(
+                            onPressed: _signInWithGoogle,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(28),
+                                side: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                            icon: Image.asset(
+                              'lib/assets/icons/google_icon.png', // Make sure you have the Google icon in your assets
+                              height: 24,
+                              width: 24,
+                            ),
+                            label: const Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
