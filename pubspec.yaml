@@ -1,5 +1,5 @@
 name: test_delete
-description: "A new Flutter project."
+description: "This is one of my favorite projects that strengthens my portfolio."
 publish_to: "none"
 version: 1.0.0+1
 
@@ -24,17 +24,27 @@ dependencies:
   path: any
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^6.0.4
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   lottie: ^2.7.0
-  flutter_lints: ^4.0.0
+  flutter_lints: ^4.0.0  
+  flutter_launcher_icons: ^0.13.1
+
 
 flutter:
   uses-material-design: true
-
   assets:
-    # - lib/assets/baby.json
     - lib/assets/images/
+    - lib/assets/baby.json
     - lib/assets/icons/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/assets/icons/icon.jpg"
+  web:
+  generate: true
+  background_color: "#ffffff"
+  theme_color: "#000000"

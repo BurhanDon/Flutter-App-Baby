@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:proste_bezier_curve/proste_bezier_curve.dart';
+import 'package:test_delete/pages/screens/Main_Page.dart';
 import 'package:test_delete/pages/screens/widgets/registration_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,7 +12,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(milliseconds: 50000), () {
       Navigator.of(context).pushReplacement(
@@ -50,19 +48,15 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          Container(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 400.0),
-                child: Container(
-                  child: const Text(
-                    'Your One-Stop Destination \n       for Baby Essentials \n          BabyShopHub',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 400.0),
+              child: Text(
+                'Your One-Stop Destination \n       for Baby Essentials \n          BabyShopHub',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -106,29 +100,27 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          // Positioned(
-          //   right: 25.0, // Adjust this value as per your requirement
-          //   bottom: 35.0, // Adjust this value as per your requirement
-          //   child: Container(
-          //     child: InkWell(
-          //       onTap: () {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => const MainPageScreen(),
-          //           ),
-          //         );
-          //       },
-          //       child: const Text(
-          //         'Skip',
-          //         style: TextStyle(
-          //             color: Color(0xFF749F29),
-          //             fontSize: 20,
-          //             fontWeight: FontWeight.bold),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned(
+            right: 25.0,
+            bottom: 35.0,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainPageScreen(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Skip',
+                style: TextStyle(
+                    color: Color(0xFF749F29),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -152,5 +144,3 @@ class NativeClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }
-
-

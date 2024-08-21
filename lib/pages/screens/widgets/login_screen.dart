@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(height: constraints.maxHeight * 0.01),
                         const Text(
-                            'Please enter your email and password to continue'),
+                            'Tap baby image 3 times quickly for secret Admin Login...'),
                         SizedBox(
                           height: constraints.maxHeight * 0.08,
                         ),
@@ -280,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           height: constraints.maxHeight * 0.12,
                           margin: EdgeInsets.only(
-                            top: constraints.maxHeight * 0.05,
+                            top: constraints.maxHeight * 0.03,
                           ),
                           child: ElevatedButton(
                             onPressed: loginUser,
